@@ -25,7 +25,7 @@ jobs:
         run: composer install --prefer-dist --no-progress
 
       - name: Ejecutar pruebas unitarias (PHPUnit)
-        run: ./vendor/bin/phpunit
+        run: php vendor/bin/phpunit
 
       # Configuración para auditoría con SonarQube / SonarCloud
       - name: Escaneo de calidad con SonarQube
