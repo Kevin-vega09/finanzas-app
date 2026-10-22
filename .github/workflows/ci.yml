@@ -1,0 +1,35 @@
+name: CI & Quality Gate
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  test-and-analyze:
+    name: Pruebas Unitarias y Análisis Estático
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: xdebug
+
+      - name: Instalar dependencias con Composer
+        run: composer install --prefer-dist --no-progress
+
+      - name: Ejecutar pruebas unitarias (PHPUnit)
+        run: ./vendor/bin/phpunit
+
+      # Configuración para auditoría con SonarQube / SonarCloud
+      - name: Escaneo de calidad con SonarQube
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
